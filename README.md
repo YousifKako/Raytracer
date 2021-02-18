@@ -5,7 +5,7 @@ This is a simple raytracer to display Spheres
 Build with Raytracer.sln solution from Visual Studio 2019
 
 # Bugs
-Cannot separate objects too far from each other. Image will be distorted
+None at the moment
 
 # Current State
 ![](State.png)
