@@ -1,16 +1,20 @@
+#pragma once
+
 #include <Vector3D.hpp>
 
 class Object3D
 {
 private:
-    Vector3D<int32_t>*  cords = nullptr;
-    Vector3D<uint16_t>* rgb   = nullptr;
+    Vector3D<double>* cords = nullptr;
+    Vector3D<float>*  rgb   = nullptr;
 
 public:
     Object3D() { }
     ~Object3D();
-    void set_cords(const int32_t x, const int32_t y, const int32_t z);
-    const Vector3D<int32_t>& get_cords() const;
-    void set_rgb(const uint16_t r, const uint16_t g, const uint16_t b);
-    const Vector3D<uint16_t>& get_rgb() const;
+
+    void set_cords(const double& x, const double& y, const double& z);
+    void set_rgb(const float& r, const float& g, const float& b);
+
+    const Vector3D<double>& get_cords() const;
+    const Vector3D<float>& get_rgb() const;
 };

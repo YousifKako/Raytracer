@@ -24,6 +24,9 @@
     <ClCompile Include="src\Objects\Sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Objects\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Raytracer\Objects\Object3D.hpp">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Raytracer\Objects\Sphere.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Raytracer\Objects\Light.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

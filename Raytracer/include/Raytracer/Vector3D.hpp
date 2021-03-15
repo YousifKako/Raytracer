@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 
@@ -20,11 +22,19 @@ public:
     Vector3D() : x1(0), x2(0), x3(0) { }
     Vector3D(const T x1, const T x2, const T x3) : x1(x1), x2(x2), x3(x3) { }
     ~Vector3D() { }
-    const Vector3D<T> mult(const Vector3D<T>& vec) const
+
+    constexpr Vector3D<T> mult(const Vector3D<T>& vec) const
     {
         return Vector3D<T>((this->x1 * vec.x1),
                            (this->x2 * vec.x2),
                            (this->x3 * vec.x3));
+    }
+
+    constexpr double length() const
+    {
+        return sqrt(pow(this->x1, 2) +
+                    pow(this->x2, 2) +
+                    pow(this->x3, 2));
     }
 
     const T& operator[](const uint16_t index) const
@@ -40,67 +50,112 @@ public:
         throw EXIT_FAILURE;
     }
 
-    template <typename V>
-    const int64_t operator*(const Vector3D<V>& vec) const
+    constexpr
+    auto operator*(const Vector3D<T>& vec) const
     {
-        return (int64_t(this->x1) * int64_t(vec[0])) +
-               (int64_t(this->x2) * int64_t(vec[1])) +
-               (int64_t(this->x3) * int64_t(vec[2]));
+        return (this->x1 * vec[0]) +
+               (this->x2 * vec[1]) +
+               (this->x3 * vec[2]);
+    }
+    
+    template <typename V>
+    constexpr
+    auto operator*(const Vector3D<V>& vec) const
+    {
+        return (this->x1 * vec[0]) +
+            (this->x2 * vec[1]) +
+            (this->x3 * vec[2]);
     }
 
     template <typename V>
-    const Vector3D<V> operator-(const Vector3D<V>& vec) const
+    constexpr
+    auto operator/(const V& i) const
     {
-        return Vector3D<V>((this->x1 - vec[0]),
-                           (this->x2 - vec[1]),
-                           (this->x3 - vec[2]));
+        return Vector3D<decltype(this->x1 * i)>
+                                ((this->x1 / i),
+                                 (this->x2 / i),
+                                 (this->x3 / i));
+    }
+
+    constexpr
+    auto operator+(const Vector3D<T>& vec) const
+    {
+        return Vector3D<decltype(this->x1 * vec[0])>
+                                ((this->x1 + vec[0]),
+                                 (this->x2 + vec[1]),
+                                 (this->x3 + vec[2]));
+    }
+
+    template <typename V>
+    constexpr
+    auto operator+(const Vector3D<V>& vec) const
+    {
+        return Vector3D<decltype(this->x1* vec[0])>
+            ((this->x1 + vec[0]),
+                (this->x2 + vec[1]),
+                (this->x3 + vec[2]));
+    }
+
+    template <typename V>
+    constexpr
+    auto operator-(const Vector3D<V>& vec) const
+    {
+        return Vector3D<decltype(this->x1 * vec[0])>
+                                ((this->x1 - vec[0]),
+                                 (this->x2 - vec[1]),
+                                 (this->x3 - vec[2]));
+    }
+
+    constexpr
+    auto operator-() const
+    {
+        return Vector3D<T>((-this->x1), (-this->x2), (-this->x3));
     }
 
     template <typename V, typename K>
-    friend Vector3D<V>& operator*(Vector3D<V>& vec, const K i);
+    friend auto operator*(Vector3D<V> vec, const K i);
 
     template <typename V, typename K>
-    friend Vector3D<V>& operator*(const K i, Vector3D<V>& vec);
+    friend auto operator*(const K i, Vector3D<V> vec);
 
     template <typename V, typename K>
-    friend Vector3D<V>& operator+(const Vector3D<V>& vec, const K i);
+    friend auto operator+(const Vector3D<V>& vec, const K i);
 
     template <typename V, typename K>
-    friend Vector3D<V>& operator+(const K i, const Vector3D<V>& vec);
+    friend auto operator+(const K i, const Vector3D<V>& vec);
 };
 
 template <typename V>
 std::ostream& operator<<(std::ostream& os, const Vector3D<V>& vec)
 {
-    os << vec[0] << '\n';
-    os << vec[1] << '\n';
-    os << vec[2] << '\n';
+    os << '<';
+    os << vec[0] << ", ";
+    os << vec[1] << ", ";
+    os << vec[2] << '>';
     return os;
 }
 
 template <typename V, typename K>
-Vector3D<V>& operator*(Vector3D<V>& vec, const K i)
+auto operator*(Vector3D<V> vec, const K i)
 {
-    vec.change_vars(vec[0] * i, vec[1] * i, vec[2] * i);
-    return vec;
+    return Vector3D<decltype(vec[0]*i)>(vec[0] * i, vec[1] * i, vec[2] * i);
 }
 
 template <typename V, typename K>
-Vector3D<V>& operator*(const K i, Vector3D<V>& vec)
+auto operator*(const K i, Vector3D<V> vec)
 {
-    vec.change_vars(vec[0] * i, vec[1] * i, vec[2] * i);
-    return vec;
+    return Vector3D<decltype(vec[0] * i)>(vec[0] * i, vec[1] * i, vec[2] * i);
 }
 
 template <typename V, typename K>
-Vector3D<V>& operator+(const Vector3D<V>& vec, const K i)
+auto operator+(const Vector3D<V>& vec, const K i)
 {
     vec.change_vars(vec[0] + i, vec[1] + i, vec[2] + i);
     return vec;
 }
 
 template <typename V, typename K>
-Vector3D<V>& operator+(const K i, const Vector3D<V>& vec)
+auto operator+(const K i, const Vector3D<V>& vec)
 {
     vec.change_vars(vec[0] + i, vec[1] + i, vec[2] + i);
     return vec;
