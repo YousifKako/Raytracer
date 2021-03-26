@@ -11,7 +11,7 @@
 const int16_t CW       = 500;
 const int16_t CH       = 500;
 const int16_t VW       = 200;
-const int16_t VH       = 200;
+const int16_t VH       = -200;
 const int16_t distance = 1;
 
 typedef struct quadratic
@@ -20,7 +20,7 @@ typedef struct quadratic
     const double t2 = NULL;
 } quadratic;
 
-const Vector3D<double> canvas_to_viewport(const double x, const double y)
+const Vector3D<double> canvas_to_viewport(const double& x, const double& y)
 {
     return Vector3D<double>(x * VW / CW, y * VH / CH, distance);
 }
@@ -52,12 +52,12 @@ const double compute_lighting(const Vector3D<double>& P,
                               const Vector3D<double>& N,
                               const Vector3D<double>& V,
                               const double& s,
-                              const std::vector<Light*>& lights)
+                              const std::vector<Light*>* lights)
 {
     double           i = 0.0;
     Vector3D<double> L;
 
-    for (Light* light : lights)
+    for (Light* light : *lights)
     {
         if (light->get_type() == "ambient")
             i += light->get_intensity();
@@ -72,13 +72,13 @@ const double compute_lighting(const Vector3D<double>& P,
             if (n_dot_l > 0)
                 i += light->get_intensity() * (n_dot_l / (N.length() * L.length()));
 
-            /*if (s != -1)
+            if (s != -1)
             {
-                auto R = 2 * N * N * L - L;
+                auto R = 2 * N * (N * L) - L;
                 auto r_dot_v = R * V;
-                if (r_dot_v >= 0)
+                if (r_dot_v > 0)
                     i += light->get_intensity() * pow(r_dot_v / (R.length() * V.length()), s);
-            }*/
+            }
         }
     }
 
@@ -116,30 +116,30 @@ const Vector3D<double> trace_ray(const Vector3D<double>& O,
     Vector3D<double> P = O + (closest_t * D);
     Vector3D<double> N = P - (*closest_sphere).get_center();
     N = N / N.length();
-    return (*closest_sphere).get_rgb() * compute_lighting(P, N, -D, (*closest_sphere).get_specular(), *lights);
+    return (*closest_sphere).get_rgb() * compute_lighting(P, N, -D, (*closest_sphere).get_specular(), lights);
 }
 
 int main(int argc, const char* argv[])
 {
     // Scene
+    // Spheres
     Sphere* const sphere1 = new Sphere(45);
-    Sphere* const sphere2 = new Sphere(45);
-    Sphere* const sphere3 = new Sphere(45);
-    Sphere* const sphere4 = new Sphere(5000);
-    // TODO: Check for conversions from positive to negitave
-    sphere1->set_cords(0, 60, 8);
+    sphere1->set_cords(0, -60, 8);
     sphere1->set_rgb(255, 0, 0);
-    sphere4->set_specular(500);
+    sphere1->set_specular(500);
 
+    Sphere* const sphere2 = new Sphere(45);
     sphere2->set_cords(-75, 0, 10);
     sphere2->set_rgb(0, 255, 0);
-    sphere4->set_specular(10);
+    sphere2->set_specular(10);
 
+    Sphere* const sphere3 = new Sphere(45);
     sphere3->set_cords(75, 0, 10);
     sphere3->set_rgb(0, 0, 255);
-    sphere4->set_specular(500);
+    sphere3->set_specular(500);
 
-    sphere4->set_cords(0, 5001, 0);
+    Sphere* const sphere4 = new Sphere(5000);
+    sphere4->set_cords(0, -5001, 0);
     sphere4->set_rgb(255, 255, 0);
     sphere4->set_specular(1000);
 
@@ -149,16 +149,17 @@ int main(int argc, const char* argv[])
     spheres->push_back(sphere3);
     spheres->push_back(sphere4);
 
+    // Lights
     Light* const light1 = new Light("ambient");
-    light1->set_intensity(0.3);
+    light1->set_intensity(0.2);
 
     Light* const light2 = new Light("point");
-    light2->set_intensity(0.9);
-    light2->set_position(new Vector3D<double>(-115, 0, 0));
+    light2->set_intensity(0.3);
+    light2->set_position(new Vector3D<double>(0, -50, 0));
 
     Light* const light3 = new Light("directional");
-    light3->set_intensity(0.3);
-    light3->set_direction(new Vector3D<double>(20, 20, 0));
+    light3->set_intensity(0.9);
+    light3->set_direction(new Vector3D<double>(-10, 40, 10));
 
     std::vector<Light*>* const lights = new std::vector<Light*>();
     lights->push_back(light1);
