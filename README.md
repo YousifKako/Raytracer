@@ -5,7 +5,7 @@ This is a simple raytracer to display Spheres
 Build with Raytracer.sln solution from Visual Studio 2019
 
 # Bugs
-None at the moment
+T2 is not being rendered and/or calculated correctly
 
 # Current State
 ![](State.png)

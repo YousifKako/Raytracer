@@ -36,14 +36,14 @@ const quadratic intersect_ray_sphere(const Vector3D<double>& O,
     const double b = 2 * (CO * D);
     const double c = (CO * CO) - (r * r);
 
-    const double discriminant = (b * b) - (4 * (a * c));
+    const double discriminant = (b * b) - ((4 * a) * c);
     if (discriminant < 0)
         return quadratic{ MAX_NUM, MAX_NUM };
 
-    const double numerator = sqrt(discriminant);
+    const double numerator   = sqrt(discriminant);
     const double denominator = 2 * a;
-    const double t1 = (-b + numerator) / denominator;
-    const double t2 = (-b - numerator) / denominator;
+    const double t1          = (-b + numerator) / denominator;
+    const double t2          = (-b - numerator) / denominator;
     
     return quadratic{ t1, t2 };
 }
@@ -55,7 +55,7 @@ const double compute_lighting(const Vector3D<double>& P,
                               const std::vector<Light*>* lights)
 {
     double           i = 0.0;
-    Vector3D<double> L;
+    Vector3D<double> L = { };
 
     for (Light* light : *lights)
     {
@@ -86,19 +86,19 @@ const double compute_lighting(const Vector3D<double>& P,
 }
 
 const Vector3D<double> trace_ray(const Vector3D<double>& O,
-                                const Vector3D<double>& D,
-                                const double& t_min,
-                                const double& t_max,
-                                const std::vector<Sphere*>* spheres,
-                                const std::vector<Light*>* lights)
+                                 const Vector3D<double>& D,
+                                 const double& t_min,
+                                 const double& t_max,
+                                 const std::vector<Sphere*>* spheres,
+                                 const std::vector<Light*>* lights)
 {
-    double closest_t = t_max;
+    double closest_t       = t_max;
     Sphere* closest_sphere = nullptr;
     for (Sphere* const sphere : *spheres)
     {
         quadratic quads = intersect_ray_sphere(O, D, *sphere);
         if (((quads.t1 >= t_min && quads.t1 <= t_max) && quads.t1 < closest_t) &&
-           !(((quads.t2 >= t_min && quads.t2 <= t_max) && quads.t2 < closest_t)))
+            !((quads.t2 >= t_min && quads.t2 <= t_max) && quads.t2 < closest_t))
         {
             closest_t = quads.t1;
             closest_sphere = sphere;

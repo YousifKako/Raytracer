@@ -15,7 +15,7 @@ void Light::set_direction(Vector3D<double>* direction)
     this->direction = direction;
 }
 
-const double& Light::get_intensity()
+const double& Light::get_intensity() const
 {
     return this->intensity;
 }
