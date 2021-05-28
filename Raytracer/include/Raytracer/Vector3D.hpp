@@ -63,6 +63,15 @@ public:
 
     template <typename V>
     constexpr
+    auto operator*(const Vector3D<V>& vec) const
+    {
+        return (this->x1 * vec[0]) +
+               (this->x2 * vec[1]) +
+               (this->x3 * vec[2]);
+    }
+
+    template <typename V>
+    constexpr
     auto operator/(const V& i) const
     {
         return Vector3D<decltype(this->x1 * i)>

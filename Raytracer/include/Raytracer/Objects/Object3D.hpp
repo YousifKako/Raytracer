@@ -6,7 +6,7 @@ class Object3D
 {
 private:
     Vector3D<double>* cords = nullptr;
-    Vector3D<float>*  rgb   = nullptr;
+    Vector3D<double>* rgb   = nullptr;
 
 public:
     Object3D() { }
@@ -16,5 +16,5 @@ public:
     void set_rgb(const float& r, const float& g, const float& b);
 
     const Vector3D<double>& get_cords() const;
-    const Vector3D<float>& get_rgb() const;
+    const Vector3D<double>& get_rgb() const;
 };

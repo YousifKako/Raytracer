@@ -13,7 +13,7 @@ void Object3D::set_cords(const double& x, const double& y, const double& z)
 
 void Object3D::set_rgb(const float& r, const float& g, const float& b)
 {
-    this->rgb = new Vector3D<float>(r, g, b);
+    this->rgb = new Vector3D<double>(r, g, b);
 }
 
 const Vector3D<double>& Object3D::get_cords() const
@@ -21,7 +21,7 @@ const Vector3D<double>& Object3D::get_cords() const
     return *this->cords;
 }
 
-const Vector3D<float>& Object3D::get_rgb() const
+const Vector3D<double>& Object3D::get_rgb() const
 {
     return *this->rgb;
 }
