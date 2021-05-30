@@ -5,8 +5,8 @@
 class Sphere : public Object3D
 {
 private:
-    const double radius           = 1;
-    double specular               = 1;
+    const double radius =  1;
+    double specular     = -1;
 
 public:
     Sphere() { }

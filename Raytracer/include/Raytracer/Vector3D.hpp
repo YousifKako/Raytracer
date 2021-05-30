@@ -122,6 +122,9 @@ public:
     friend auto operator*(const K& i, const Vector3D<V>& vec);
 
     template <typename V, typename K>
+    friend auto operator*(const Vector3D<Vector3D<V>>& vec, const Vector3D<K>& vec2);
+
+    template <typename V, typename K>
     friend auto operator+(const Vector3D<V>& vec, const K& i);
 
     template <typename V, typename K>
@@ -149,6 +152,15 @@ template <typename V, typename K>
 auto operator*(const K& i, const Vector3D<V>& vec)
 {
     return vec * i;
+}
+
+template <typename V, typename K>
+auto operator*(const Vector3D<Vector3D<V>>& vec, const Vector3D<K>& vec2)
+{
+    return Vector3D<decltype(vec[0][0] * vec2[0])>
+        ((vec[0][0] * vec2[0]) + (vec[0][1] * vec2[1]) + (vec[0][2] * vec2[2]),
+         (vec[1][0] * vec2[0]) + (vec[1][1] * vec2[1]) + (vec[1][2] * vec2[2]),
+         (vec[2][0] * vec2[0]) + (vec[2][1] * vec2[1]) + (vec[2][2] * vec2[2]));
 }
 
 template <typename V, typename K>

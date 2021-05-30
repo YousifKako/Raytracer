@@ -6,7 +6,8 @@
 #include <Objects/Sphere.hpp>
 #include <Objects/Light.hpp>
 
-#define MAX_NUM INFINITY
+#define PI 3.14159265358979323846
+#define MAX_RENDER_DISTANCE INFINITY
 
 const double CW       = 500;
 const double CH       = 500;
@@ -38,7 +39,7 @@ const quadratic intersect_ray_sphere(const Vector3D<double>& O,
 
     const double discriminant = (b * b) - ((4 * a) * c);
     if (discriminant < 0)
-        return quadratic{ MAX_NUM, MAX_NUM };
+        return quadratic{ MAX_RENDER_DISTANCE, MAX_RENDER_DISTANCE };
 
     const double numerator   = std::sqrt(discriminant);
     const double denominator = 2 * a;
@@ -68,16 +69,18 @@ const double compute_lighting(const Vector3D<double>& P,
             else
                 L = *light->get_direction();
 
+            // Diffuse
             double n_dot_l = N * L;
             if (n_dot_l > 0)
                 i += light->get_intensity() * (n_dot_l / (N.length() * L.length()));
 
+            // Specular
             if (s != -1)
             {
                 auto R = 2 * N * (N * L) - L;
                 auto r_dot_v = R * V;
                 if (r_dot_v > 0)
-                    i += light->get_intensity() * pow(r_dot_v / (R.length() * V.length()), s);
+                    i += light->get_intensity() * std::pow(r_dot_v / (R.length() * V.length()), s);
             }
         }
     }
@@ -97,12 +100,12 @@ const Vector3D<double> trace_ray(const Vector3D<double>& O,
     for (Sphere* const sphere : *spheres)
     {
         quadratic quads = intersect_ray_sphere(O, D, *sphere);
-        if ((quads.t1 >= t_min) && quads.t1 < closest_t)
+        if ((quads.t1 >= t_min && quads.t1 <= t_max) && quads.t1 < closest_t)
         {
             closest_t = quads.t1;
             closest_sphere = sphere;
         }
-        if ((quads.t2 >= t_min) && quads.t2 < closest_t)
+        if ((quads.t2 >= t_min && quads.t2 <= t_max) && quads.t2 < closest_t)
         {
             closest_t = quads.t2;
             closest_sphere = sphere;
@@ -116,6 +119,24 @@ const Vector3D<double> trace_ray(const Vector3D<double>& O,
     Vector3D<double> N = P - (*closest_sphere).get_cords();
     N = N / N.length();
     return (*closest_sphere).get_rgb() * compute_lighting(P, N, -D, (*closest_sphere).get_specular(), lights);
+}
+
+auto compute_rotation_matrix(const Vector3D<double>& vec)
+{
+    auto sinX = std::sin(vec[0] * PI / 180.0);
+    auto sinY = std::sin(vec[1] * PI / 180.0);
+    auto sinZ = std::sin(vec[2] * PI / 180.0);
+
+    auto cosX = std::cos(vec[0] * PI / 180.0);
+    auto cosY = std::cos(vec[1] * PI / 180.0);
+    auto cosZ = std::cos(vec[2] * PI / 180.0);
+
+    const Vector3D<Vector3D<double>> rotation = {
+        {cosZ*cosY, cosZ*sinY*sinX-sinZ*cosX, cosZ*sinY*cosX+sinZ*sinX},
+        {sinZ*cosY, sinZ*sinY*sinX+cosZ*cosX, sinZ*sinY*cosX-cosZ*sinX},
+        {    -sinY,                cosY*sinX,                cosY*cosX}};
+
+    return rotation;
 }
 
 int main(int argc, const char* argv[])
@@ -154,7 +175,7 @@ int main(int argc, const char* argv[])
     
     Light* const light2 = new Light("point");
     light2->set_intensity(0.4);
-    light2->set_position(new Vector3D<double>(2, 1, 0));
+    light2->set_position(new Vector3D<double>(2, 0, 0));
     
     Light* const light3 = new Light("directional");
     light3->set_intensity(0.2);
@@ -165,20 +186,21 @@ int main(int argc, const char* argv[])
     lights->push_back(light2);
     lights->push_back(light3);
 
-
     const int16_t cw = CW / 2;
     const int16_t ch = CH / 2;
 
     //HDC hdc = GetDC(NULL);
     HDC hdc = GetDC(GetConsoleWindow());
 
-    Vector3D<double> O = { 0, 0, 0 };
+    Vector3D<double> O = { 5, 0, 2 };
+    auto rotation = compute_rotation_matrix({ 0, -40, 0 });
+
     for (int32_t x = -cw; x < cw; ++x)
     {
         for (int32_t y = -ch; y < ch; ++y)
         {
-            const Vector3D<double> D = canvas_to_viewport(x, y);
-            const Vector3D<double> color = trace_ray(O, D, distance, MAX_NUM, spheres, lights);
+            const Vector3D<double> D = rotation * canvas_to_viewport(x, y);
+            const Vector3D<double> color = trace_ray(O, D, distance, MAX_RENDER_DISTANCE, spheres, lights);
             SetPixel(hdc, x + ch, -y + cw, RGB(color[0], color[1], color[2]));
         }
     }
