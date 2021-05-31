@@ -10,8 +10,9 @@ Build with Raytracer.sln solution from Visual Studio 2019
     - [x] Diffuse Reflection
     - [x] Specular Reflection
 - [x] Arbitrary Camera Positioning and Rotation
-- [] Shadows
-- [] Object Reflection
+- [x] Shadows
+- [x] Object Reflection
+- [ ] Optimization
 
 # Bugs
 None
