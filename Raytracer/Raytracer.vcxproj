@@ -147,11 +147,16 @@
     <ClCompile Include="src\Objects\Light.cpp" />
     <ClCompile Include="src\Objects\Object3D.cpp" />
     <ClCompile Include="src\Objects\Sphere.cpp" />
+    <ClCompile Include="src\Objects\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Raytracer\Objects\Light.hpp" />
     <ClInclude Include="include\Raytracer\Objects\Object3D.hpp" />
     <ClInclude Include="include\Raytracer\Objects\Sphere.hpp" />
+    <ClInclude Include="include\Raytracer\Objects\Triangle.hpp" />
+    <ClInclude Include="include\Raytracer\Raytracing\SphereRayTrace.hpp" />
+    <ClInclude Include="include\Raytracer\Raytracing\TriangleRayTrace.hpp" />
+    <ClInclude Include="include\Raytracer\Utilities.hpp" />
     <ClInclude Include="include\Raytracer\Vector3D.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

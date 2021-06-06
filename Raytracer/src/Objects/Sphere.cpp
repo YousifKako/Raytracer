@@ -15,17 +15,20 @@ void Sphere::set_reflective(const double& reflective)
     this->reflective = reflective;
 }
 
-const double& Sphere::get_specular() const
+const double&
+Sphere::get_specular() const
 {
     return this->specular;
 }
 
-const double& Sphere::get_reflective() const
+const double&
+Sphere::get_reflective() const
 {
     return this->reflective;
 }
 
-const double& Sphere::get_radius() const
+const double&
+Sphere::get_radius() const
 {
     return this->radius;
 }

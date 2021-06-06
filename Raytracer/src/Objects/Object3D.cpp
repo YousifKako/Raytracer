@@ -1,27 +1,23 @@
 #include <Objects/Object3D.hpp>
 
-Object3D::~Object3D()
+void Object3D::set_cords(const double& x1, const double& x2, const double& x3)
 {
-    delete this->cords;
-    delete this->rgb;
+    this->cords.change_vars(x1, x2, x3);
 }
 
-void Object3D::set_cords(const double& x, const double& y, const double& z)
+void Object3D::set_rgb(const double& x1, const double& x2, const double& x3)
 {
-    this->cords = new Vector3D<double>(x, y, z);
+    this->rgb.change_vars(x1, x2, x3);
 }
 
-void Object3D::set_rgb(const float& r, const float& g, const float& b)
+const Vector3D<double>&
+Object3D::get_cords() const
 {
-    this->rgb = new Vector3D<double>(r, g, b);
+    return this->cords;
 }
 
-const Vector3D<double>& Object3D::get_cords() const
+const Vector3D<double>&
+Object3D::get_rgb() const
 {
-    return *this->cords;
-}
-
-const Vector3D<double>& Object3D::get_rgb() const
-{
-    return *this->rgb;
+    return this->rgb;
 }
