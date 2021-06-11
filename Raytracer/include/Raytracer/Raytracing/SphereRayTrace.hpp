@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <windows.h>
 
 #include <Objects/Sphere.hpp>
 #include <Objects/Light.hpp>
@@ -129,7 +130,7 @@ namespace SphereRayTrace {
         const double  closest_t = intersect_pair.second;
 
         if (closest_sphere == nullptr)
-            return Vector3D<double>(0, 0, 0);
+            return Vector3D<double>(200, 200, 200);
 
         const Vector3D<double> P = O + (closest_t * D);
         Vector3D<double> N = P - (*closest_sphere).get_cords();
@@ -157,7 +158,7 @@ namespace SphereRayTrace {
             const int16_t ch = 0;
             const HDC hdc = { };
             const HDC memdc = { };
-            const Vector3D<double> O = { -5, 0, 2 };
+            const Vector3D<double> O = { };
             const double recursion_depth = 3;
             const Vector3D<Vector3D<double>> rotation = { };
         } RunDeps;
@@ -169,7 +170,7 @@ namespace SphereRayTrace {
             sphere1->set_cords(0, -2, 7);
             sphere1->set_rgb(255, 0, 0);
             sphere1->set_specular(500);
-            sphere1->set_reflective(0.2);
+            sphere1->set_reflective(0.3);
 
             Sphere* const sphere2 = new Sphere(2);
             sphere2->set_cords(-3.5, 0, 9);
@@ -221,7 +222,7 @@ namespace SphereRayTrace {
             const HBITMAP hbitmap = CreateCompatibleBitmap(hdc, CW, CH);
             SelectObject(memdc, hbitmap);
 
-            Vector3D<double> O = { -5, 0, 2 };
+            Vector3D<double> O = { 0, 0, 0 };
             const double recursion_depth = 3;
             const Vector3D<Vector3D<double>> rotation = compute_rotation_matrix({ 0, 35, 0 });
 
@@ -237,7 +238,7 @@ namespace SphereRayTrace {
             {
                 for (int32_t y = deps.ch; y > -deps.ch; --y)
                 {
-                    const Vector3D<double> D = deps.rotation * canvas_to_viewport(x, y);
+                    const Vector3D<double> D =  canvas_to_viewport(x, y);
                     const Vector3D<double> color = SphereRayTrace::trace_ray(
                         deps.O, D, distance, MAX_RENDER_DISTANCE,
                         deps.recursion_depth, deps.spheres, deps.lights);

@@ -21,14 +21,15 @@ Build with Raytracer.sln solution from Visual Studio 2019
         - Running: 1594.48ms
 
 # Triangle Ray-Tracing Check-List
-- [ ] Basic Triangle Raytracing
-- [ ] Barycentric Coordinates
-- [ ] Mollar-Trumbore Algorithm
+- [x] Basic Triangle Raytracing
+- [x] Barycentric Coordinates
+- [x] Moller-Trumbore Algorithm
 - [ ] Load Wavefront .obj file
 - [ ] Render .obj files
+- [ ] Refactor code to render multiple shapes within one scene (Polymorphism)
 
-# Bugs
-None
+# Current State of Triangle Raytracing
+![](State_Two.png)
 
-# Current State
+# Current State of Sphere Raytracing
 ![](State.png)

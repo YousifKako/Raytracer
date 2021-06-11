@@ -7,14 +7,14 @@ template <typename T>
 class Vector3D
 {
 private:
-    T x1 = nullptr;
-    T x2 = nullptr;
-    T x3 = nullptr;
+    T x1;
+    T x2;
+    T x3;
 
 public:
-    Vector3D() : x1(0), x2(0), x3(0) { }
+    Vector3D() { }
     Vector3D(const T x1, const T x2, const T x3) : x1(x1), x2(x2), x3(x3) { }
-    ~Vector3D() { }
+    ~Vector3D() { };
 
     void change_vars(const T x1, const T x2, const T x3)
     {
@@ -39,7 +39,7 @@ public:
                     pow(this->x3, 2));
     }
 
-    constexpr Vector3D<T>&
+    constexpr Vector3D<T>
     cross(const Vector3D<T>& vec) const
     {
         return Vector3D<T>
@@ -154,9 +154,9 @@ template <typename V>
 std::ostream& operator<<(std::ostream& os, const Vector3D<V>& vec)
 {
     os << '<';
-    os << vec.x1 << ", ";
-    os << vec.x2 << ", ";
-    os << vec.x3 << '>';
+    os << vec[0] << ", ";
+    os << vec[1] << ", ";
+    os << vec[2] << '>';
     return os;
 }
 

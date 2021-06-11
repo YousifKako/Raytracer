@@ -14,14 +14,25 @@ void Triangle::set_vertices_rgb(const Vector3D<double> x1,
     this->vertices_rgb.change_vars(x1, x2, x3);
 }
 
-const auto&
+void Triangle::set_vertices_rgb(double x1, double x2, double x3)
+{
+    this->normals.change_vars(x1, x2, x3);
+}
+
+const Vector3D<Vector3D<double>>&
 Triangle::get_vertices() const
 {
     return this->vertices;
 }
 
-const auto&
+const Vector3D<Vector3D<double>>&
 Triangle::get_vertices_rgb() const
 {
     return this->vertices_rgb;
+}
+
+const Vector3D<double>&
+Triangle::get_normals() const
+{
+    return this->normals;
 }
