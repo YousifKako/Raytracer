@@ -24,8 +24,8 @@ Build with Raytracer.sln solution from Visual Studio 2019
 - [x] Basic Triangle Raytracing
 - [x] Barycentric Coordinates
 - [x] Moller-Trumbore Algorithm
-- [ ] Load Wavefront .obj file
-- [ ] Render .obj files
+- [x] Load Wavefront .obj file
+- [x] Render .obj files
 - [ ] Refactor code to render multiple shapes within one scene (Polymorphism)
 
 # Current State of Triangle Raytracing

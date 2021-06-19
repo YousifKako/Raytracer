@@ -4,13 +4,13 @@
 #define EPSILON             0.0001
 #define MAX_RENDER_DISTANCE INFINITY
 
-const int16_t CW      = 500;
-const int16_t CH      = 500;
-const int16_t VW      = 1;
-const int16_t VH      = 1;
+const int16_t CW      = 800;
+const int16_t CH      = 800;
+const int16_t VW      = 2;
+const int16_t VH      = 2;
 const double distance = 1;
 
-const Vector3D<double>
+inline const Vector3D<double>
 canvas_to_viewport(const double& x, const double& y)
 {
     return Vector3D<double>(x * VW / CW, y * VH / CH, distance);

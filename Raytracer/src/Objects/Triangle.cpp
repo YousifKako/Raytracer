@@ -19,6 +19,11 @@ void Triangle::set_vertices_rgb(double x1, double x2, double x3)
     this->normals.change_vars(x1, x2, x3);
 }
 
+void Triangle::set_normals(const Vector3D<double> normals)
+{
+    this->normals.change_vars(normals[0], normals[1], normals[2]);
+}
+
 const Vector3D<Vector3D<double>>&
 Triangle::get_vertices() const
 {

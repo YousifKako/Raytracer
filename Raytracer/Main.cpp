@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 
+#include <Model/Model.hpp>
 #include <Objects/Sphere.hpp>
 #include <Objects/Light.hpp>
 #include <Utilities.hpp>
@@ -13,7 +14,9 @@
 int main(int argc, const char* argv[])
 {
     auto start = std::chrono::high_resolution_clock::now();
-
+    
+    //Model* model = new Model("C:\\Users\\PC\\Desktop\\Test.obj");
+    //model->load();
     // Setup Sphere Scene
     //const auto deps = SphereRayTrace::Scene::setup();
     const auto deps = TriangleRayTrace::Scene::setup();
