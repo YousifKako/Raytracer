@@ -50,14 +50,16 @@ namespace TriangleRayTrace {
         return true;
     }
 
-    const std::pair<bool, const Triangle>*
-    closest_intersection(const std::vector<Mesh*>* const model,
-                         Vector3D<double>& coords,
-                         const Vector3D<double>& O,
-                         const Vector3D<double>& D)
+    const std::pair<bool, const Triangle*>*
+    closest_intersection(const Vector3D<double>&             O,
+                         const Vector3D<double>&             D,
+                         const double&                   t_min,
+                         const double&                   t_max,
+                         Vector3D<double>&              coords,
+                         const std::vector<Mesh*>* const model)
     {
         double closest_t = MAX_RENDER_DISTANCE;
-        const Triangle* closest_triangle = nullptr;
+        Triangle* closest_triangle = new Triangle();
         bool intersect = false;
 
         for (Mesh* const mesh : *model)
@@ -69,32 +71,29 @@ namespace TriangleRayTrace {
 
                 if (moller_trumbore(coords, O, D, V))
                 {
-                    return new std::pair<bool, const Triangle>(true, triangle);
-                    if (closest_t > 0 && coords[0] < closest_t)
+                    if (closest_t >= t_min && closest_t <= t_max && coords[0] < closest_t)
                     {
                         closest_t = coords[0];
-                        closest_triangle = &triangle;
+                        *closest_triangle = triangle;
                         intersect = true;
                     }
                 }
             }
         }
 
-        if (intersect)
-            return new std::pair<bool, const Triangle>(intersect, *closest_triangle);
-        return nullptr;
+        return new std::pair<bool, const Triangle*>(intersect, closest_triangle);
     }
 
     const Vector3D<double>
-    get_color(const Vector3D<double>& baryc, const Triangle triangle)
+    get_color(const Vector3D<double>& baryc, const Triangle* const triangle)
     {
         auto u = baryc[1];
         auto v = baryc[2];
         auto w = 1 - u - v;
 
-        auto c1 = triangle.get_vertices_rgb()[0];
-        auto c2 = triangle.get_vertices_rgb()[1];
-        auto c3 = triangle.get_vertices_rgb()[2];
+        auto c1 = triangle->get_vertices_rgb()[0];
+        auto c2 = triangle->get_vertices_rgb()[1];
+        auto c3 = triangle->get_vertices_rgb()[2];
 
         return (w * c1) * 255 + (u * c2) * 255 + (v * c3) * 255;
     }
@@ -104,7 +103,6 @@ namespace TriangleRayTrace {
                      const Vector3D<double>& N,
                      const Vector3D<double>& V,
                      const double& s,
-                     const Triangle triangle,
                      const std::vector<Light*>* const lights,
                      const std::vector<Mesh*>* const model)
     {
@@ -131,8 +129,8 @@ namespace TriangleRayTrace {
 
                 // Shadows
                 Vector3D<double> coords = Vector3D<double>();
-                const auto shadow = closest_intersection(model, coords, P, L);
-                if (shadow != nullptr)
+                const auto shadow = closest_intersection(P, L, EPSILON, t_max, coords, model);
+                if (shadow->first)
                     continue;
 
                 // Diffuse Reflection
@@ -154,37 +152,43 @@ namespace TriangleRayTrace {
         return i;
     }
 
-    inline  const Vector3D<double>
-    trace_ray(const Vector3D<double>& O,
-              const Vector3D<double>& D,
-              const double& recursion_depth,
-              const std::vector<Mesh*>* const model,
-              const std::vector<Light*>* const lights)
+    inline const Vector3D<double>
+    trace_ray(const Vector3D<double>&               O,
+              const Vector3D<double>&               D,
+              const double&                     t_min,
+              const double&                     t_max,
+              const double&           recursion_depth,
+              const std::vector<Light*>* const lights,
+              const std::vector<Mesh*>*  const  model)
     {
         // Calculate Barycentric Coordinate's using Moller Trumbore Algorithm
         Vector3D<double> coords = Vector3D<double>();
-        auto pair = closest_intersection(model, coords, O, D);
-        if (pair == nullptr)
-            return Vector3D<double>(200, 200, 200);
-        const Triangle closest_triangle = pair->second;
-        delete pair;
+        auto pair = closest_intersection(O, D, t_min, t_max, coords, model);
+        if (!pair->first)
+            return BACKGROUND_COLOR;
+        const Triangle* const closest_triangle = pair->second;
 
         // Get RBG colors
         auto pixel = get_color(coords, closest_triangle);
-        
+
         const auto P = O + coords[0] * D;
         const Vector3D<double> local_color = pixel *
-            compute_lighting(P, closest_triangle.get_normals(), -D, closest_triangle.get_specular(), closest_triangle, lights, model);
+            compute_lighting(P, closest_triangle->get_normals(), -D, closest_triangle->get_specular(), lights, model);
         
-        const double r = closest_triangle.get_reflective();
+        const double r = closest_triangle->get_reflective();
         if (recursion_depth <= 0 || r <= 0)
+        {
+            delete pair, closest_triangle;
             return local_color;
+        }
         
-        const Vector3D<double> R = reflect_ray(-D, closest_triangle.get_normals());
-        const Vector3D<double> reflected_color = trace_ray(P, R, recursion_depth - 1, model, lights);
+        const Vector3D<double> R = reflect_ray(-D, closest_triangle->get_normals());
+        const Vector3D<double> reflected_color = trace_ray(P, R, EPSILON, t_max, recursion_depth - 1, lights, model);
 
-        auto temp = local_color * (1 - r) + reflected_color * r;
-        return temp;
+        Vector3D<double> color = local_color * (1 - r) + reflected_color * r;
+        delete pair, closest_triangle;
+
+        return color;
     }
 
     namespace Scene {
@@ -203,7 +207,7 @@ namespace TriangleRayTrace {
 
         const RunDeps setup()
         {
-            Model* model = new Model("..\\Assets\\Test.obj");
+            Model* model = new Model("..\\assets\\Test.obj");
             model->load();
             const std::vector<Mesh*>* const mod = model->get();
 
@@ -213,7 +217,7 @@ namespace TriangleRayTrace {
 
             Light* const light2 = new Light("point");
             light2->set_intensity(0.2);
-            light2->set_position(2, 5, 6);
+            light2->set_position(0, 3, 1);
 
             Light* const light3 = new Light("directional");
             light3->set_intensity(0.2);
@@ -223,7 +227,7 @@ namespace TriangleRayTrace {
 
             std::vector<Light*>* const lights = new std::vector<Light*>();
             lights->push_back(light1);
-            //lights->push_back(light2);
+            lights->push_back(light2);
             lights->push_back(light3);
 
             const int16_t cw = CW / 2;
@@ -253,8 +257,9 @@ namespace TriangleRayTrace {
                 for (int32_t y = deps.ch; y > -deps.ch; --y)
                 {
                     const Vector3D<double> D = deps.rotation * canvas_to_viewport(x, y);
-                    const Vector3D<double> color = TriangleRayTrace::trace_ray(deps.O, D, deps.recursion_depth,
-                        deps.model, deps.lights);
+                    const Vector3D<double> color = TriangleRayTrace::trace_ray(deps.O, D, 
+                        distance, MAX_RENDER_DISTANCE, deps.recursion_depth,
+                        deps.lights, deps.model);
                     SetPixel(deps.memdc, x + deps.ch, -y + deps.cw, RGB(color[0], color[1], color[2]));
                 }
             }

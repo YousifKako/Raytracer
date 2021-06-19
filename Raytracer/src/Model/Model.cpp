@@ -44,8 +44,8 @@ void Model::load()
     std::string buffer = "";
 
     std::vector<Vector3D<double>> temp_vertices = { };
-    std::vector<Vector3D<double>> temp_normals = { };
-    std::vector<Vector3D<double>> temp_texture = { };
+    std::vector<Vector3D<double>> temp_normals  = { };
+    std::vector<Vector3D<double>> temp_texture  = { };
 
     Mesh* mesh            = new Mesh();
     std::string mesh_name = "";
@@ -92,7 +92,7 @@ void Model::load()
             
             if (num_objs == 1)
             {
-                triangle.set_reflective(0.3);
+                triangle.set_reflective(0.4);
                 triangle.set_vertices_rgb({ 0, 1, 0.87 }, { 0, 1, 0.87 }, { 0, 1, 0.87 });
             }
             else if (num_objs == 2)
@@ -102,7 +102,7 @@ void Model::load()
             }
             else
             {
-                triangle.set_reflective(0.4);
+                triangle.set_reflective(0.1);
                 triangle.set_vertices_rgb({ 0.18, 0.31, 0.31 }, { 0.18, 0.31, 0.31 }, { 0.18, 0.31, 0.31 });
             }
 

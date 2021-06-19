@@ -1,5 +1,6 @@
 #pragma once
 
+#define BACKGROUND_COLOR    Vector3D<double>(200, 200, 200)
 #define PI                  3.14159265358979323846
 #define EPSILON             0.0001
 #define MAX_RENDER_DISTANCE INFINITY

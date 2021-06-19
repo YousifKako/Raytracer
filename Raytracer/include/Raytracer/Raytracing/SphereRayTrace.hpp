@@ -130,7 +130,7 @@ namespace SphereRayTrace {
         const double  closest_t = intersect_pair.second;
 
         if (closest_sphere == nullptr)
-            return Vector3D<double>(200, 200, 200);
+            return BACKGROUND_COLOR;
 
         const Vector3D<double> P = O + (closest_t * D);
         Vector3D<double> N = P - (*closest_sphere).get_cords();
