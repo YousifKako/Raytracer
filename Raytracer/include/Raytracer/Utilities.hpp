@@ -12,9 +12,9 @@ const int16_t VH      = 2;
 const double distance = 1;
 
 inline const Vector3D<double>
-canvas_to_viewport(const double& x, const double& y)
+canvas_to_viewport(const double x, const double y)
 {
-    return Vector3D<double>(x * VW / CW, y * VH / CH, distance);
+    return { x * VW / CW, y * VH / CH, distance };
 }
 
 const Vector3D<double>
@@ -38,10 +38,7 @@ compute_rotation_matrix(const Vector3D<double>& vec)
     const double cosY = std::cos(x1);
     const double cosZ = std::cos(x2);
 
-    const Vector3D<Vector3D<double>> rotation = {
-        {cosZ * cosY, cosZ * sinY * sinX - sinZ * cosX, cosZ * sinY * cosX + sinZ * sinX},
-        {sinZ * cosY, sinZ * sinY * sinX + cosZ * cosX, sinZ * sinY * cosX - cosZ * sinX},
-        {      -sinY,                      cosY * sinX,                      cosY * cosX}};
-
-    return rotation;
+    return { {cosZ * cosY, cosZ * sinY * sinX - sinZ * cosX, cosZ * sinY * cosX + sinZ * sinX},
+             {sinZ * cosY, sinZ * sinY * sinX + cosZ * cosX, sinZ * sinY * cosX - cosZ * sinX},
+             {      -sinY,                      cosY * sinX,                      cosY * cosX} };
 }

@@ -7,13 +7,12 @@
 class Model
 {
 private:
-    std::string model_name = "";
-    std::vector<Mesh*>* model = new std::vector<Mesh*>();
-    std::uint32_t num_objs = 0;
+    std::vector<Mesh> model = { };
+    std::uint32_t num_objs  = 0;
 
 public:
-    Model(const std::string_view& model_name);
+    Model(const std::string& model_name);
 
-    void load();
-    const std::vector<Mesh*>* const get();
+    const std::vector<std::string> split(std::string const& original, char separator);
+    const std::vector<Mesh>& get();
 };

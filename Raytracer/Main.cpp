@@ -8,19 +8,14 @@
 #include <Objects/Sphere.hpp>
 #include <Objects/Light.hpp>
 #include <Utilities.hpp>
-#include <Raytracing/SphereRayTrace.hpp>
-#include <Raytracing/TriangleRayTrace.hpp>
+#include <Raytracing/SphereTriangleRayTrace.hpp>
 
 int main(int argc, const char* argv[])
 {
     auto start = std::chrono::high_resolution_clock::now();
-    
-    //Model* model = new Model("C:\\Users\\PC\\Desktop\\Test.obj");
-    //model->load();
-    // Setup Sphere Scene
-    //const auto deps = SphereRayTrace::Scene::setup();
-    const auto deps = TriangleRayTrace::Scene::setup();
-    
+
+    auto deps = Scene::setup();
+
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Setup Execution Time: "
         << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f
@@ -28,14 +23,30 @@ int main(int argc, const char* argv[])
         << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
-    
-    // Run Sphere Scene
-    //SphereRayTrace::Scene::run(deps);
-    TriangleRayTrace::Scene::run(deps);
+
+    Scene::run(deps);
 
     end = std::chrono::high_resolution_clock::now();
     std::cout << "Computations Execution Time: "
         << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f
         << "ms"
         << std::endl;
+
+
+    if (!glfwInit())
+        exit(-1);
+
+    GLFWwindow* window = glfwCreateWindow(CW, CH, "Raytracer", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        exit(-1);
+    }
+
+    glfwMakeContextCurrent(window);
+    glDrawPixels(CW, CH, GL_RGBA, GL_UNSIGNED_BYTE, deps.pixels);
+    glfwSwapBuffers(window);
+    while (!glfwWindowShouldClose(window))
+        glfwPollEvents();
+    glfwTerminate();
 }

@@ -30,9 +30,6 @@
     <ClCompile Include="src\Objects\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Model\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,19 +50,16 @@
     <ClInclude Include="include\Raytracer\Utilities.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Raytracer\Raytracing\SphereRayTrace.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Raytracer\Objects\Triangle.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Raytracer\Raytracing\TriangleRayTrace.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Raytracer\Model\Mesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Raytracer\Model\Model.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Raytracer\Raytracing\SphereTriangleRayTrace.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

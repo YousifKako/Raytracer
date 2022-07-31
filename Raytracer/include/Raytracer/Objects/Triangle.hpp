@@ -11,14 +11,14 @@ private:
     Vector3D<double> normals = { };
 
 public:
-    void set_vertices(const Vector3D<double> x1,
-                      const Vector3D<double> x2,
-                      const Vector3D<double> x3);
-    void set_vertices_rgb(const Vector3D<double> x1,
-                          const Vector3D<double> x2,
-                          const Vector3D<double> x3);
+    void set_vertices(const Vector3D<double>& x1,
+                      const Vector3D<double>& x2,
+                      const Vector3D<double>& x3);
+    void set_vertices_rgb(const Vector3D<double>& x1,
+                          const Vector3D<double>& x2,
+                          const Vector3D<double>& x3);
     void set_vertices_rgb(double x1, double x2, double x3);
-    void set_normals(const Vector3D<double> normals);
+    void set_normals(const Vector3D<double>& normals);
     
     const Vector3D<Vector3D<double>>& get_vertices() const;
     const Vector3D<Vector3D<double>>& get_vertices_rgb() const;

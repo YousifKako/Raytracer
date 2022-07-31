@@ -7,9 +7,9 @@ template <typename T>
 class Vector3D
 {
 private:
-    T x1;
-    T x2;
-    T x3;
+    T x1{ };
+    T x2{ };
+    T x3{ };
 
 public:
     Vector3D() { }
@@ -23,7 +23,14 @@ public:
         this->x3 = x3;
     }
 
-    constexpr Vector3D<T>&
+    void change_vars(const Vector3D<T>& temp)
+    {
+        this->x1 = temp[0];
+        this->x2 = temp[1];
+        this->x3 = temp[2];
+    }
+
+    constexpr Vector3D<T>
     mult(const Vector3D<T>& vec) const
     {
         return Vector3D<T>((this->x1 * vec.x1),
@@ -49,7 +56,7 @@ public:
     }
 
     template <typename K>
-    constexpr auto&
+    constexpr auto
     cross(const Vector3D<K>& vec) const
     {
         return Vector3D<decltype(this->x1 * vec.x1)>
@@ -91,7 +98,7 @@ public:
 
     template <typename V>
     constexpr auto
-    operator/(const V& i) const
+    operator/(const V i) const
     {
         return Vector3D<decltype(this->x1 * i)>
                                 ((this->x1 / i),
@@ -135,19 +142,19 @@ public:
     }
 
     template <typename V, typename K>
-    friend auto operator*(const Vector3D<V>& vec, const K& i);
+    friend auto operator*(const Vector3D<V>& vec, const K i);
 
     template <typename V, typename K>
-    friend auto operator*(const K& i, const Vector3D<V>& vec);
+    friend auto operator*(const K i, const Vector3D<V>& vec);
 
     template <typename V, typename K>
     friend auto operator*(const Vector3D<Vector3D<V>>& vec, const Vector3D<K>& vec2);
 
     template <typename V, typename K>
-    friend auto operator+(const Vector3D<V>& vec, const K& i);
+    friend auto operator+(const Vector3D<V>& vec, const K i);
 
     template <typename V, typename K>
-    friend auto operator+(const K& i, const Vector3D<V>& vec);
+    friend auto operator+(const K i, const Vector3D<V>& vec);
 };
 
 template <typename V>
@@ -161,14 +168,14 @@ std::ostream& operator<<(std::ostream& os, const Vector3D<V>& vec)
 }
 
 template <typename V, typename K>
-auto operator*(const Vector3D<V>& vec, const K& i)
+auto operator*(const Vector3D<V>& vec, const K i)
 {
     return Vector3D<decltype(vec.x1 * i)>
         (vec.x1 * i, vec.x2 * i, vec.x3 * i);
 }
 
 template <typename V, typename K>
-auto operator*(const K& i, const Vector3D<V>& vec)
+auto operator*(const K i, const Vector3D<V>& vec)
 {
     return vec * i;
 }
@@ -183,14 +190,14 @@ auto operator*(const Vector3D<Vector3D<V>>& vec, const Vector3D<K>& vec2)
 }
 
 template <typename V, typename K>
-auto operator+(const Vector3D<V>& vec, const K& i)
+auto operator+(const Vector3D<V>& vec, const K i)
 {
     return Vector3D<decltype(vec.x1 * i)>
         (vec.x1 + i, vec.x2 + i, vec.x3 + i);
 }
 
 template <typename V, typename K>
-auto operator+(const K& i, const Vector3D<V>& vec)
+auto operator+(const K i, const Vector3D<V>& vec)
 {
     return vec + i;
 }

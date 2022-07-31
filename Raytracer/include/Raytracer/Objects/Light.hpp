@@ -14,10 +14,10 @@ public:
     ~Light();
 
     void set_intensity(double intensity);
-    void set_position(const double& x1, const double& x2, const double& x3);
-    void set_direction(const double& x1, const double& x2, const double& x3);
+    void set_position(const double x1, const double x2, const double x3);
+    void set_direction(const double x1, const double x2, const double x3);
 
-    const double& get_intensity() const;
+    const double get_intensity() const;
     const std::string& get_type() const;
     const Vector3D<double>& get_position() const;
     const Vector3D<double>& get_direction() const;
